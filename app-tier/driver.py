@@ -1,4 +1,8 @@
 from image_classification import Classifier
+from SQSComs import SQSQueue
+from S3Coms import S3FileManager
+
+
 
 
 if __name__ == "__main__":
