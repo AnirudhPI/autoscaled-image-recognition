@@ -3,7 +3,7 @@ import boto3
 class SQSQueue:
     def __init__(self, queue_name):
         self.queue_name = queue_name
-        self.sqs = boto3.client('sqs')
+        self.sqs = boto3.client('sqs', region_name='us-east-1')
         self.queue_url = self.get_queue_url()
 
     def get_queue_url(self):
