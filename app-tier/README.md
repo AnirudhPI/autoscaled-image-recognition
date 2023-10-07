@@ -22,6 +22,11 @@ This folder is repsonsible to hold all the functionalities needed to host the ap
 ```bash
 mkdir ~/image_proc_folder
 cp  app-tier/data/imagenet-100-updated/imagenet-100/* ~/image_proc_folder/
+
+#clone repo
+git clone https://github.com/hasagar97/autoscaled-image-recognition.git
+pip3 install boto3
+git switch app-tier
 ```
 
 - running test on classifier class
