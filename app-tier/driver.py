@@ -2,6 +2,7 @@ from image_classification import Classifier
 from SQSComs import SQSQueue
 from S3Coms import S3FileManager
 import time
+import subprocess
 
 # Initialize the SQS clients and S3 file manager
 input_sqs_queue = SQSQueue("SQS-requests")
@@ -12,6 +13,7 @@ s3_results = S3FileManager("cumulonimbus-clouds-results")
 
 
 classifier = Classifier()
+retry_count=0
 
 while True:
     try:     
@@ -38,6 +40,8 @@ while True:
             # Delete the message from the input SQS queue
             input_sqs_queue.delete_message(message['ReceiptHandle'])
 
+            retry_count=0
+
             # Send a new message with the key and classification result to another SQS queue
             output_sqs_queue.send_message(f"{s3_key}#$@$#{classification_result}")
         else:
@@ -45,4 +49,9 @@ while True:
     except:
         print("[Warning] the SQS queue depth is not updated, expected behavior due to processing lags")
         # Sleep for a while before checking for new messages again
-        time.sleep(5)
+        time.sleep(10) 
+        retry_count = 0  
+        if retry_count > 4: 
+            subprocess.run(['shell/terminate_app_tier.sh'], check=True, shell=True) 
+        else: retry_count += 1
+
